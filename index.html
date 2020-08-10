@@ -12,6 +12,9 @@
 		<style type="text/css">
 			#map {
 			  #map { width: 800px; height: 600px; }
+			  body { font: 16px/1.4 "Helvetica Neue", Arial, sans-serif; }
+        		.ghbtns { position: relative; top: 4px; margin-left: 5px; }
+                        a { color: #0077ff; }
 			}
 		</style>	  
 	</head>
@@ -20,11 +23,28 @@
 		<div id="map"></div>
 
 		<script>	
-			var map = L.map('map').setView([41.217541,45.402376], 13);
+			var map = L.map('map')
+			    .setView([41.217541, 45.402376], 13);
 
 			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-			  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-			}).addTo(map);
+				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+			    })
+			    .addTo(map);
+
+			$.getJSON("data.geojson", function(data) {
+				    var locations = data.features.map(
+					function(a) {
+					    var location = a.geometry.coordinates.reverse();
+					    location.push(0.5);
+					    return location;
+					});
+
+		    	var heat = L.heatLayer(locations, {
+				radius: 35
+			});
+			
+			map.addLayer(heat);
+					      
 		</script>
 	</body>
 </html>
