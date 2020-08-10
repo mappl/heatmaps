@@ -34,15 +34,26 @@
 			    .addTo(map);
 
 
-<!-- 		    	var heat = L.heatLayer(locations, {
-				radius: 35
-			});
-			
-			map.addLayer(heat); 
+
+<!-- 			$.getJSON("https://mappl.github.io/leaflet-heatmaps-test/data.geojson",
+				function(data) {
+				    var locations = data.features.map(
+					function(rat) {
+					    var location = rat.geometry.coordinates.reverse();
+					    location.push(0.5);
+					    return location;
+					}
+				    };
+				    var heat = L.heatLayer(locations, {
+					radius: 35
+				    });
+
+				    map.addLayer(heat); 
 -->
-			var heatmapLayer = new HeatmapOverlay(cfg);
-			heatmapLayer.setData(testData);
-			heatmapLayer.addTo(map);
+
+				    var heatmapLayer = new HeatmapOverlay(cfg);
+				    heatmapLayer.setData(testData);
+				    heatmapLayer.addTo(map);
 		</script>
 	</body>
 </html>
