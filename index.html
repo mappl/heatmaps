@@ -8,7 +8,9 @@
 		<link rel="stylesheet" crossorigin="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
 		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
 	  	<script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js></script>
+		<script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/leaflet-heatmap.js crossorigin=""</script>
 		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="https://mappl.github.io/leaflet-heatmaps-test/heatmap_data.js</script>
 		<style type="text/css">
 			#map {
 			  #map { width: 800px; height: 600px; }
@@ -31,20 +33,16 @@
 			    })
 			    .addTo(map);
 
-			$.getJSON("https://mappl.github.io/leaflet-heatmaps-test/data.geojson", function(data) {
-				    var locations = data.features.map(
-					function(a) {
-					    var location = a.geometry.coordinates.reverse();
-					    location.push(0.5);
-					    return location;
-					});
 
-		    	var heat = L.heatLayer(locations, {
+<!-- 		    	var heat = L.heatLayer(locations, {
 				radius: 35
 			});
 			
-			map.addLayer(heat);
-					      
+			map.addLayer(heat); 
+-->
+			var heatmapLayer = new HeatmapOverlay(cfg);
+			heatmapLayer.setData(testData);
+			heatmapLayer.addTo(map);
 		</script>
 	</body>
 </html>
