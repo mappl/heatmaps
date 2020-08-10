@@ -31,7 +31,7 @@
 			    })
 			    .addTo(map);
 
-			$.getJSON("data.geojson", function(data) {
+			$.getJSON("https://mappl.github.io/leaflet-heatmaps-test/data.geojson", function(data) {
 				    var locations = data.features.map(
 					function(a) {
 					    var location = a.geometry.coordinates.reverse();
