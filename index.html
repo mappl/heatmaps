@@ -13,18 +13,39 @@
     <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/heatmap.min.js"></script>
     <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/leaflet-heatmap.js"></script>
     <script src="https://mappl.github.io/leaflet-heatmaps-test/heatmap_data.js"></script>
+    <!--script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=75780e21-1d3e-4aa2-b14e-1a99a3f4e6d9" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.3.1/layer/tile/Yandex.min.js" integrity="sha512-aqdPFk64oMfp8X2hKeN1Oyg2+Pm4QE6wTEetP0Sq6hrFudc2WEKcxvTom5eoh8cIA3WToD3Tz9sz/+LfCfRz6g==" crossorigin="anonymous"></script
+    -->
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script>
       $( window ).on( "load", function() {
         
-        var baseLayer = L.tileLayer(
+        var osm = L.tileLayer(
           'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
             attribution: '...',
             maxZoom: 18
           }
         );
-          
-        var cfg = {
+        
+        var esriSattelite = L.tileLayer(
+          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
+            attribution: 'esri',
+            maxZoom: 18
+          }
+        );
+        
+        var googleSattelite = L.tileLayer(
+          'http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+            subdomains:['mt0','mt1','mt2','mt3']},{
+            attribution: 'Google-Satellite',
+            maxZoom: 18
+          }
+        );
+/*        
+        var yandexVector = L.yandex();     
+        var yandexSatellite = L.yandex({ type: 'satellite' });
+*/        
+        var heatmapJs = new HeatmapOverlay({
             "radius": 4.5,
             "maxOpacity": .8,
             "scaleRadius": false,
@@ -32,23 +53,40 @@
             "latField": 'lng',
             "lngField": 'lat',
             "valueField": 'can16bitr15'
-        };
-        
-        var heatmapLayer = new HeatmapOverlay(cfg);
+        });
    
         var mapControl = new L.Map('heatmapjs', {
             center: new L.LatLng(45.402376,41.217541),
             zoom: 15, 
+            attributionControl: false,
             zoomControl: true,
-            layers: [baseLayer,heatmapLayer]
+            layers: [osm,esriSattelite,googleSattelite/*,yandexVector,yandexSatellite*/,heatmapJs]
             });
-   
-        heatmapLayer.setData(testData);
+
+        heatmapJs.setData(testData);
         
+
         L.control.scale({
           "imperial":false,
           "position":'bottomleft'
         }).addTo(mapControl);
+        
+
+        var baseLayers = {
+          "OpenStreetMap": osm,
+/*        
+          "Яндекс - карты":yandexVector,
+          "Яндекс - спутник":yandexSatellite,
+*/
+          "Esri world imagery": esriSattelite,
+          "Google sattelite": googleSattelite
+        };
+        
+        var overlays = {
+            "heatmap:can16bitr15": heatmapJs
+        };
+        
+        L.control.layers(baseLayers, overlays).addTo(mapControl);
         
         L.edgeScaleBar().addTo(mapControl);
         
