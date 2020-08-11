@@ -5,9 +5,11 @@
     <title>heatmap.js</title>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <link rel="stylesheet" crossorigin="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.rawgit.com/ardhi/Leaflet.MousePosition/master/src/L.Control.MousePosition.css">
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
     <!--script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script-->
-
+    
+    <script src="https://geof-osgl.github.io/Leaflet.EdgeScaleBar/leaflet.edgescalebar.js"></script>
     <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/heatmap.min.js"></script>
     <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/leaflet-heatmap.js"></script>
     <script src="https://mappl.github.io/leaflet-heatmaps-test/heatmap_data.js"></script>
@@ -37,16 +39,27 @@
         var mapControl = new L.Map('heatmapjs', {
             center: new L.LatLng(45.402376,41.217541),
             zoom: 15, 
-            zoomControl: false,
+            zoomControl: true,
             layers: [baseLayer,heatmapLayer]
             });
    
-         heatmapLayer.setData(testData);
+        heatmapLayer.setData(testData);
+        
+        L.control.scale({
+          "imperial":false,
+          "position":'bottomleft'
+        }).addTo(mapControl);
+        
+        L.edgeScaleBar().addTo(mapControl);
         
         });
     </script>   
     <style type="text/css">
       #heatmapjs { width: 800px; height: 600px; }
+      
+      .leaflet-control-scale-line {
+		 	box-sizing: border-box;
+		}
     </style>  
   </head>
   <body>
