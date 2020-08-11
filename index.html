@@ -2,21 +2,30 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>heatmap.js</title>
+    <title> </title>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <link rel="stylesheet" crossorigin="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdn.rawgit.com/ardhi/Leaflet.MousePosition/master/src/L.Control.MousePosition.css">
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
-    <!--script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script-->
-    
+<!-- wms -->
+    <script src="https://heigeo.github.io/leaflet.wms/dist/leaflet.wms.js"></script>
+<!-- pkk -->    
+    <script src="http://originalsin.github.io/Leaflet.TileLayer.Rosreestr/src/TileLayer.Rosreestr.js"></script>    
+<!-- scalebar -->
     <script src="https://geof-osgl.github.io/Leaflet.EdgeScaleBar/leaflet.edgescalebar.js"></script>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/ardhi/Leaflet.MousePosition/master/src/L.Control.MousePosition.css">    
+<!-- heatmap js -->
+    <!--script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script-->
     <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/heatmap.min.js"></script>
     <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/leaflet-heatmap.js"></script>
+<!-- heatmap data -->
     <script src="https://mappl.github.io/leaflet-heatmaps-test/heatmap_data.js"></script>
+<!-- ya maps -->
     <!--script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=75780e21-1d3e-4aa2-b14e-1a99a3f4e6d9" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.3.1/layer/tile/Yandex.min.js" integrity="sha512-aqdPFk64oMfp8X2hKeN1Oyg2+Pm4QE6wTEetP0Sq6hrFudc2WEKcxvTom5eoh8cIA3WToD3Tz9sz/+LfCfRz6g==" crossorigin="anonymous"></script
-    -->
-    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.3.1/layer/tile/Yandex.min.js"
+            integrity="sha512-aqdPFk64oMfp8X2hKeN1Oyg2+Pm4QE6wTEetP0Sq6hrFudc2WEKcxvTom5eoh8cIA3WToD3Tz9sz/+LfCfRz6g=="
+            crossorigin="anonymous">
+    </script-->
+    
     <script>
       $( window ).on( "load", function() {
         
@@ -41,11 +50,17 @@
             maxZoom: 18
           }
         );
+        
+       var cadastre = L.tileLayer.Rosreestr(
+        'https://pkk.rosreestr.ru/arcgis/rest/services/PKK6/Cadastre/MapServer/export?layers%3Dshow%3A21&dpi=96&format=PNG32&bboxSR=102100&imageSR=102100&size=1024%2C1024&transparent=true&f=image&bbox={bbox}', {
+          tileSize: 1024,
+          attribution: 'Rosreestr'
+       });        
 /*        
         var yandexVector = L.yandex();     
         var yandexSatellite = L.yandex({ type: 'satellite' });
 */        
-        var heatmapJs = new HeatmapOverlay({
+        var heatmap = new HeatmapOverlay({
             "radius": 5,
             "maxOpacity": .8,
             "scaleRadius": false,
@@ -54,16 +69,17 @@
             "lngField": 'lng',
             "valueField": 'can16bitr15'
         });
-   
+        
+        
         var mapControl = new L.Map('heatmapjs', {
             center: new L.LatLng(45.402376,41.217541),
             zoom: 15, 
             attributionControl: false,
             zoomControl: true,
-            layers: [osm,esriSattelite,googleSattelite/*,yandexVector,yandexSatellite*/,heatmapJs]
+            layers: [osm,esriSattelite,googleSattelite/*,yandexVector,yandexSatellite*/,heatmap]
             });
 
-        heatmapJs.setData(testData);
+        heatmap.setData(testData);
         
 
         L.control.scale({
@@ -79,11 +95,14 @@
           "Яндекс - спутник":yandexSatellite,
 */
           "Esri world imagery": esriSattelite,
-          "Google sattelite": googleSattelite
+          "Google sattelite": googleSattelite,
         };
         
+        
+        
         var overlays = {
-            "heatmap:can16bitr15": heatmapJs
+            "heatmap:can16bitr15": heatmap,
+            "Публичная кадастровая карта": cadastre
         };
         
         L.control.layers(baseLayers, overlays).addTo(mapControl);
@@ -113,8 +132,8 @@
     </style>  
   </head>
   <body>
-    <div class="header" id="header"><h1>heatmap.js</h1></div>
-    <div class="heatmapjs" id="heatmapjs"><h1>heatmap.js</h1></div>
+    <div class="header" id="header"><h1>It works!</h1></div>
+    <div class="heatmapjs" id="heatmapjs"></div>
   </body>
 
 </html>
