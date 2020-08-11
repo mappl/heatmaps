@@ -3,26 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <title>Leaflet TEST1</title>
-    <link rel="stylesheet" crossorigin="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
+    <!--link rel="stylesheet" crossorigin="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" /-->
+    <!--script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script-->
     <!--script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script-->
     <!--script src="https://code.jquery.com/jquery-2.1.1.min.js"></script-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
     <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/heatmap.min.js"</script>
     <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/leaflet-heatmap.js"</script>
     <script src="https://mappl.github.io/leaflet-heatmaps-test/heatmap_data.js"</script>
     <style type="text/css">
-      #map { width: 800px; height: 600px; }
+      #map-canvas { width: 800px; height: 600px; }
       body { font: 16px/1.4 "Helvetica Neue", Arial, sans-serif; }
       .ghbtns { position: relative; top: 4px; margin-left: 5px; }
       a { color: #0077ff; }
-    </style>
+    </style>  
   </head>
 
-  <body>
-    <h1>heatmap.js</h1>
-    <div class="heatmap" id="map-canvas">
-    <script>
-      window.onload = function() {    
+  <body onload = function(){
             var baseLayer = L.tileLayer(
               'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
                 attribution: '...',
@@ -49,7 +47,9 @@
                 });
        
             heatmapLayer.setData(testData);
-       };
-    </script>
+       };>
+    <h1>heatmap.js</h1>
+    <div id="map-canvas">
   </body>
+
 </html>
