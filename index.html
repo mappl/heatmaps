@@ -1,81 +1,55 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-		<meta charset="utf-8" />
+    <meta charset="utf-8" />
     <title>Leaflet TEST1</title>
-		<link rel="stylesheet" crossorigin="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
-		<script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
-		<script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/leaflet-heatmap.js"</script>
-		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-		<script src="https://mappl.github.io/leaflet-heatmaps-test/heatmap_data.js"</script>
-		<style type="text/css">
-			#map {
-			  #map { width: 800px; height: 600px; }
-			  body { font: 16px/1.4 "Helvetica Neue", Arial, sans-serif; }
-        		.ghbtns { position: relative; top: 4px; margin-left: 5px; }
-                        a { color: #0077ff; }
-			}
-		</style>	  
-	</head>
+    <link rel="stylesheet" crossorigin="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
+    <!--script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script-->
+    <!--script src="https://code.jquery.com/jquery-2.1.1.min.js"></script-->
+    <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/heatmap.min.js"</script>
+    <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/leaflet-heatmap.js"</script>
+    <script src="https://mappl.github.io/leaflet-heatmaps-test/heatmap_data.js"</script>
+    <style type="text/css">
+      #map { width: 800px; height: 600px; }
+      body { font: 16px/1.4 "Helvetica Neue", Arial, sans-serif; }
+      .ghbtns { position: relative; top: 4px; margin-left: 5px; }
+      a { color: #0077ff; }
+    </style>
+  </head>
 
-	<body>
-		<div id="map"></div>
-
-		<script>	
-<!-- 
-			var map = L.map('map')
-			    .setView([41.217541, 45.402376], 13);
-
-			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-			    })
-			    .addTo(map);
-
-
-
-			$.getJSON("https://mappl.github.io/leaflet-heatmaps-test/data.geojson",
-				function(data) {
-				    var locations = data.features.map(
-					function(rat) {
-					    var location = rat.geometry.coordinates.reverse();
-					    location.push(0.5);
-					    return location;
-					}
-				    };
-				    var heat = L.heatLayer(locations, {
-					radius: 35
-				    });
-
-				    map.addLayer(heat); 
--->
-		var baseLayer = L.tileLayer(
-		  'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-		    attribution: '...',
-		    maxZoom: 18
-		  }
-		);
-			
-		var cfg = {
-		  	"radius": 2,
-		  	"maxOpacity": .8,
-		  	"scaleRadius": true,
-		  	"useLocalExtrema": true,
-		  	latField: 'lat',
-		  	lngField: 'lng',
-		  	valueField: 'can16bitr15'
-		};											      
-											      
-		var heatmapLayer = new HeatmapOverlay(cfg);
-											      
-		var map = new L.Map('map', {
-		      center: new L.LatLng(41.217541, 45.402376),
-		      zoom: 13, 
-		      layers: [baseLayer, heatmapLayer]
-		      });
-											      
-		heatmapLayer.setData(testData);
-											      
-		</script>
-	</body>
+  <body>
+    <h1>heatmap.js</h1>
+    <div class="heatmap" id="map-canvas">
+    <script>
+      window.onload = function() {    
+            var baseLayer = L.tileLayer(
+              'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+                attribution: '...',
+                maxZoom: 18
+              }
+            );
+              
+            var cfg = {
+                "radius": 2,
+                "maxOpacity": .8,
+                "scaleRadius": true,
+                "useLocalExtrema": true,
+                latField: 'lat',
+                lngField: 'lng',
+                valueField: 'can16bitr15'
+            };
+            
+            var heatmapLayer = new HeatmapOverlay(cfg);
+       
+            var map = new L.Map('map-canvas', {
+                center: new L.LatLng(41.217541, 45.402376),
+                zoom: 13, 
+                layers: [baseLayer, heatmapLayer]
+                });
+       
+            heatmapLayer.setData(testData);
+       };
+    </script>
+  </body>
 </html>
