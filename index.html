@@ -46,10 +46,10 @@
         var yandexSatellite = L.yandex({ type: 'satellite' });
 */        
         var heatmapJs = new HeatmapOverlay({
-            "radius": 4.5,
+            "radius": 5,
             "maxOpacity": .8,
             "scaleRadius": false,
-            "useLocalExtrema": false,
+            "useLocalExtrema": true,
             "latField": 'lat',
             "lngField": 'lng',
             "valueField": 'can16bitr15'
