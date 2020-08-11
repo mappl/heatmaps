@@ -93,15 +93,27 @@
         });
     </script>   
     <style type="text/css">
-      #heatmapjs { width: 800px; height: 600px; }
+        html, body{
+          width: 95%;
+          height: 95%;
+        }
+        #heatmapjs {   
+          width: 95%;
+          height: 95%;
+          padding: 10px;
+          background-color: transparent;
+          -webkit-border-radius: 4px;
+          -moz-border-radius: 4px;
+          border-radius: 4px;
+        }
       
-      .leaflet-control-scale-line {
-		 	box-sizing: border-box;
-		}
+        .leaflet-control-scale-line {
+          box-sizing: border-box;
+        }
     </style>  
   </head>
   <body>
-    
+    <div class="header" id="header"><h1>heatmap.js</h1></div>
     <div class="heatmapjs" id="heatmapjs"><h1>heatmap.js</h1></div>
   </body>
 
