@@ -61,13 +61,20 @@
         var yandexSatellite = L.yandex({ type: 'satellite' });
 */        
         var heatmap = new HeatmapOverlay({
-            "radius": 5,
+            "radius": 3.5/*0.00015259021896696422*/,
             "maxOpacity": .8,
             "scaleRadius": false,
             "useLocalExtrema": true,
             "latField": 'latitude',
             "lngField": 'longitude',
-            "valueField": 'can16bitr15_norm'
+            "valueField": 'can16bitr15_norm',
+            "gradient": { 
+              0.001: 'black',
+              0.05: 'blue',
+              0.25: 'cyan', 
+              0.5: 'green', 
+              0.75: 'yellow', 
+              1: 'red'}
         });
         
         
