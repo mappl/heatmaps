@@ -4,26 +4,23 @@
     <meta charset="utf-8" />
     <title> </title>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <link rel="stylesheet" crossorigin="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
+    <script src="ext/leaflet-src.js"></script>
+    <link rel="stylesheet" href="ext/leaflet.css" />    
 <!-- wms -->
-    <script src="https://heigeo.github.io/leaflet.wms/dist/leaflet.wms.js"></script>
+    <script src="ext/leaflet.wms.js"></script>
 <!-- pkk -->    
-    <script src="https://originalsin.github.io/Leaflet.TileLayer.Rosreestr/src/TileLayer.Rosreestr.js"></script>    
+    <script src="ext/leaflet.TileLayer.Rosreestr.js"></script>    
 <!-- scalebar -->
-    <script src="https://geof-osgl.github.io/Leaflet.EdgeScaleBar/leaflet.edgescalebar.js"></script>
-    <link rel="stylesheet" href="https://cdn.rawgit.com/ardhi/Leaflet.MousePosition/master/src/L.Control.MousePosition.css">    
+    <script src="ext/leaflet.edgescalebar.js"></script>
+    <link rel="stylesheet" href="ext/leaflet.control.mousePosition.css">
 <!-- heatmap js -->
-    <!--script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script-->
-    <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/heatmap.min.js"></script>
-    <script src="https://www.patrick-wied.at/static/heatmapjs/assets/js/leaflet-heatmap.js"></script>
+    <script src="ext/heatmap.js"></script>
+    <script src="ext/leaflet-heatmap.js"></script>
 <!-- heatmap data -->
-    <script src="https://mappl.github.io/leaflet-heatmaps-test/heatmap_data.js"></script>
+    <script src="data/heatdata.js"></script>
 <!-- ya maps -->
     <!--script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=75780e21-1d3e-4aa2-b14e-1a99a3f4e6d9" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.3.1/layer/tile/Yandex.min.js"
-            integrity="sha512-aqdPFk64oMfp8X2hKeN1Oyg2+Pm4QE6wTEetP0Sq6hrFudc2WEKcxvTom5eoh8cIA3WToD3Tz9sz/+LfCfRz6g=="
-            crossorigin="anonymous">
+    <script src="ext/leaflet.layer.Yandex.min.js">
     </script-->
     
     <script>
@@ -60,14 +57,66 @@
         var yandexVector = L.yandex();     
         var yandexSatellite = L.yandex({ type: 'satellite' });
 */        
-        var heatmap = new HeatmapOverlay({
+        
+        var can_r7 = new HeatmapOverlay({
             "radius": 3.5/*0.00015259021896696422*/,
-            "maxOpacity": .8,
+            "maxOpacity": .5,
             "scaleRadius": false,
             "useLocalExtrema": true,
-            "latField": 'latitude',
-            "lngField": 'longitude',
-            "valueField": 'can16bitr15_norm',
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Наполненность бункера',
+            "gradient": { 
+              0.001: 'black',
+              0.05: 'blue',
+              0.25: 'cyan', 
+              0.5: 'green', 
+              0.75: 'yellow', 
+              1: 'red'}
+        });
+                
+        var can_r13 = new HeatmapOverlay({
+            "radius": 3.5/*0.00015259021896696422*/,
+            "maxOpacity": .5,
+            "scaleRadius": false,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Зазор решето нижнее',
+            "gradient": { 
+              0.001: 'black',
+              0.05: 'blue',
+              0.25: 'cyan', 
+              0.5: 'green', 
+              0.75: 'yellow', 
+              1: 'red'}
+        });
+
+        var can_r14 = new HeatmapOverlay({
+            "radius": 3.5/*0.00015259021896696422*/,
+            "maxOpacity": .5,
+            "scaleRadius": false,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Зазор решето верхнее',
+            "gradient": { 
+              0.001: 'black',
+              0.05: 'blue',
+              0.25: 'cyan', 
+              0.5: 'green', 
+              0.75: 'yellow', 
+              1: 'red'}
+        });
+
+        var can16bitr12 = new HeatmapOverlay({
+            "radius": 3.5/*0.00015259021896696422*/,
+            "maxOpacity": .5,
+            "scaleRadius": false,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Поток зерна',
             "gradient": { 
               0.001: 'black',
               0.05: 'blue',
@@ -77,24 +126,80 @@
               1: 'red'}
         });
         
+        var can16bitr15 = new HeatmapOverlay({
+            "radius": 3.5/*0.00015259021896696422*/,
+            "maxOpacity": .5,
+            "scaleRadius": false,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Влажность',
+            "gradient": { 
+              0.001: 'black',
+              0.05: 'blue',
+              0.25: 'cyan', 
+              0.5: 'green', 
+              0.75: 'yellow', 
+              1: 'red'}
+        });
+        
+        var can8bitr18 = new HeatmapOverlay({
+            "radius": 3.5/*0.00015259021896696422*/,
+            "maxOpacity": .5,
+            "scaleRadius": false,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Бункер',
+            "gradient": { 
+              0.001: 'black',
+              0.05: 'blue',
+              0.25: 'cyan', 
+              0.5: 'green', 
+              0.75: 'yellow', 
+              1: 'red'}
+        });
+        
+        var can8bitr26 = new HeatmapOverlay({
+            "radius": 3.5/*0.00015259021896696422*/,
+            "maxOpacity": .5,
+            "scaleRadius": false,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Положение наклонной камеры',
+            "gradient": { 
+              0.001: 'black',
+              0.05: 'blue',
+              0.25: 'cyan', 
+              0.5: 'green', 
+              0.75: 'yellow', 
+              1: 'red'}
+        });
+        
+        can_r7.setData(heatData);
+        can_r13.setData(heatData);
+        can_r14.setData(heatData);
+        can16bitr12.setData(heatData);
+        can16bitr15.setData(heatData);
+        can8bitr18.setData(heatData);
+        can8bitr26.setData(heatData);
         
         var mapControl = new L.Map('heatmapjs', {
             center: new L.LatLng(45.402376,41.217541),
             zoom: 15, 
             attributionControl: false,
             zoomControl: true,
-            layers: [osm,esriSattelite,googleSattelite/*,yandexVector,yandexSatellite*/,heatmap]
+            layers: [osm,esriSattelite,googleSattelite/*,yandexVector,yandexSatellite*/,can16bitr15]
             });
-
-        heatmap.setData(testData);
-        
 
         L.control.scale({
           "imperial":false,
           "position":'bottomleft'
         }).addTo(mapControl);
         
-
+        L.edgeScaleBar().addTo(mapControl);
+        
         var baseLayers = {
           "OpenStreetMap": osm,
 /*        
@@ -108,13 +213,19 @@
         
         
         var overlays = {
-            "heatmap:can16bitr15": heatmap,
+            "Наполненность бункера": can_r7,
+            "Зазор решето нижнее": can_r13,
+            "Зазор решето верхнее": can_r14,
+            "Поток зерна": can16bitr12,
+            "Влажность": can16bitr15,
+            "Бункер": can8bitr18,
+            "Положение наклонной камеры": can8bitr26,
             "Публичная кадастровая карта": cadastre
         };
         
         L.control.layers(baseLayers, overlays).addTo(mapControl);
         
-        L.edgeScaleBar().addTo(mapControl);
+
         
         });
     </script>   
@@ -139,7 +250,7 @@
     </style>  
   </head>
   <body>
-    <div class="header" id="header"><h1>It works!</h1></div>
+    <div class="header" id="header"><h1>Карта</h1></div>
     <div class="heatmapjs" id="heatmapjs"></div>
   </body>
 
