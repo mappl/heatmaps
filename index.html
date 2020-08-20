@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title> </title>
+    <title>Карта</title>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="ext/leaflet-src.js"></script>
     <link rel="stylesheet" href="ext/leaflet.css" />    
@@ -58,123 +58,154 @@
         var yandexSatellite = L.yandex({ type: 'satellite' });
 */        
         
+        var heatRadiusMeters = 20;
+        
+        function getHeatmapRadius(aLat,aLevel){
+          metersPerPx = 156543.03392 * Math.cos(aLat * Math.PI / 180) / Math.pow(2,aLevel);
+          return heatRadiusMeters / metersPerPx;
+        };          
+        
+        var initialcenter = new L.LatLng(45.402376,41.217541)
+        var initialRadius = getHeatmapRadius(initialcenter.lat,15);
+        
+        var palette1 = { 
+                0.25: "rgb(0,0,255)", 
+                0.55: "rgb(0,255,0)", 
+                0.85: "yellow", 
+                1.0: "rgb(255,0,0)"
+            }
+        var palette2 = {
+                0.0: "rgba(000,000,255,0)",
+                0.1: "rgba(000,000,255,0)",
+                0.2: "rgba(000,255,000,1)",
+                0.5: "rgba(000,255,000,1)",
+                0.8: "rgba(255,255,000,1)",
+                1.0: "rgba(255,000,000,1)"
+            };
+            
+        var palette3 = {
+                0.0: "#f9ffe0",
+                0.2: "#e4ff7a",
+                0.4: "#ffe81a",
+                0.6: "#ffbd00",
+                0.8: "#ffa000",
+                1.0: "#fc7f00"
+            };
+            
+        var palette4 = { 
+                0.0: "rgba(000,000,255,0)", 
+                0.2: "rgba(000,000,255,1)", 
+                0.4: "rgba(000,255,255,1)", 
+                0.6: "rgba(000,255,000,1)", 
+                0.8: "rgba(255,255,000,1)", 
+                1.0: "rgba(255,000,000,1)"
+            }
+        
+        var palette = palette4;
+        
         var can_r7 = new HeatmapOverlay({
-            "radius": 3.5/*0.00015259021896696422*/,
-            "maxOpacity": .5,
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
             "scaleRadius": false,
             "useLocalExtrema": true,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Наполненность бункера',
-            "gradient": { 
-              0.001: 'black',
-              0.05: 'blue',
-              0.25: 'cyan', 
-              0.5: 'green', 
-              0.75: 'yellow', 
-              1: 'red'}
+            "gradient": palette
         });
                 
         var can_r13 = new HeatmapOverlay({
-            "radius": 3.5/*0.00015259021896696422*/,
-            "maxOpacity": .5,
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
             "scaleRadius": false,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
             "useLocalExtrema": true,
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Зазор решето нижнее',
-            "gradient": { 
-              0.001: 'black',
-              0.05: 'blue',
-              0.25: 'cyan', 
-              0.5: 'green', 
-              0.75: 'yellow', 
-              1: 'red'}
+            "gradient": palette
         });
 
         var can_r14 = new HeatmapOverlay({
-            "radius": 3.5/*0.00015259021896696422*/,
-            "maxOpacity": .5,
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
             "scaleRadius": false,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
             "useLocalExtrema": true,
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Зазор решето верхнее',
-            "gradient": { 
-              0.001: 'black',
-              0.05: 'blue',
-              0.25: 'cyan', 
-              0.5: 'green', 
-              0.75: 'yellow', 
-              1: 'red'}
+            "gradient": palette
         });
 
         var can16bitr12 = new HeatmapOverlay({
-            "radius": 3.5/*0.00015259021896696422*/,
-            "maxOpacity": .5,
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
             "scaleRadius": false,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
             "useLocalExtrema": true,
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Поток зерна',
-            "gradient": { 
-              0.001: 'black',
-              0.05: 'blue',
-              0.25: 'cyan', 
-              0.5: 'green', 
-              0.75: 'yellow', 
-              1: 'red'}
+            "gradient": palette
         });
         
         var can16bitr15 = new HeatmapOverlay({
-            "radius": 3.5/*0.00015259021896696422*/,
-            "maxOpacity": .5,
-            "scaleRadius": false,
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
+            "scaleRadius": true,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
             "useLocalExtrema": true,
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Влажность',
-            "gradient": { 
-              0.001: 'black',
-              0.05: 'blue',
-              0.25: 'cyan', 
-              0.5: 'green', 
-              0.75: 'yellow', 
-              1: 'red'}
+            "gradient": palette
         });
         
         var can8bitr18 = new HeatmapOverlay({
-            "radius": 3.5/*0.00015259021896696422*/,
-            "maxOpacity": .5,
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
             "scaleRadius": false,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
             "useLocalExtrema": true,
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Бункер',
-            "gradient": { 
-              0.001: 'black',
-              0.05: 'blue',
-              0.25: 'cyan', 
-              0.5: 'green', 
-              0.75: 'yellow', 
-              1: 'red'}
+            "gradient": palette
         });
         
         var can8bitr26 = new HeatmapOverlay({
-            "radius": 3.5/*0.00015259021896696422*/,
-            "maxOpacity": .5,
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
             "scaleRadius": false,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
             "useLocalExtrema": true,
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Положение наклонной камеры',
-            "gradient": { 
-              0.001: 'black',
-              0.05: 'blue',
-              0.25: 'cyan', 
-              0.5: 'green', 
-              0.75: 'yellow', 
-              1: 'red'}
+            "gradient": palette
         });
         
         can_r7.setData(heatData);
@@ -185,13 +216,31 @@
         can8bitr18.setData(heatData);
         can8bitr26.setData(heatData);
         
+        function setHeatmapsRadius(newRadius){
+        
+            can_r7.cfg.radius = newRadius;
+            can_r13.cfg.radius = newRadius;
+            can_r14.cfg.radius = newRadius;
+            can16bitr12.cfg.radius = newRadius;
+            can16bitr15.cfg.radius = newRadius;
+            can8bitr18.cfg.radius = newRadius;
+            can8bitr26.cfg.radius = newRadius;
+        };
+        
+        
         var mapControl = new L.Map('heatmapjs', {
             center: new L.LatLng(45.402376,41.217541),
-            zoom: 15, 
+            zoom: 15,
+            maxZoom: 18,
             attributionControl: false,
             zoomControl: true,
             layers: [osm,esriSattelite,googleSattelite/*,yandexVector,yandexSatellite*/,can16bitr15]
             });
+
+        mapControl.on('zoomstart', function(ev) {
+             setHeatmapsRadius(ev.target.options.center.lat,ev.target.options.zoom);
+        });
+
 
         L.control.scale({
           "imperial":false,
