@@ -94,6 +94,16 @@
 
       this._update();
     },
+		_getPixelRadius: function () {
+			var centerLatLng = this._map.getCenter();
+			var pointC = this._map.latLngToContainerPoint(centerLatLng);
+			var pointX = [pointC.x + 1, pointC.y];
+			var latLngC = this._map.containerPointToLatLng(pointC);
+			var latLngX = this._map.containerPointToLatLng(pointX);
+			var distanceX = latLngC.distanceTo(latLngX);
+			var pixels = this.cfg.radiusMeters / distanceX;
+			return pixels >= 1 ? pixels : 1;
+		},
     _update: function() {
       var bounds, zoom, scale;
       var generatedData = { max: this._max, min: this._min, data: [] };
@@ -137,7 +147,9 @@
 
         var radius;
 
-        if (entry.radius) {
+				if (this.cfg.fixedRadius && this.cfg.radiusMeters) {
+					radius = this._getPixelRadius();
+				} else if (entry.radius) {
           radius = entry.radius * radiusMultiplier;
         } else {
           radius = (this.cfg.radius || 2) * radiusMultiplier;
@@ -155,13 +167,24 @@
       this._heatmap.setData(generatedData);
     },
     setData: function(data) {
-      this._max = data.max || this._max;
-      this._min = data.min || this._min;
+      
+      // this._max = data.max || this._max;
+      // this._min = data.min || this._min;
+      
       var latField = this.cfg.latField || 'lat';
       var lngField = this.cfg.lngField || 'lng';
       var valueField = this.cfg.valueField || 'value';
-    
-      // transform data to latlngs
+
+      // max and min value are now calculated directly from data      
+      this._max = data.max || Math.max.apply(Math, data.data.map(function(datum) {
+        return datum[valueField];
+      }));
+      
+      this._min = data.min || Math.min.apply(Math, data.data.map(function(datum) {
+        return datum[valueField];
+      }));
+      
+    // transform data to latlngs
       var data = data.data;
       var len = data.length;
       var d = [];
