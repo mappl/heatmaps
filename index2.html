@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Карта</title>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="ext/leaflet-src.js"></script>
+    <link rel="stylesheet" href="ext/leaflet.css" />    
+<!-- wms -->
+    <script src="ext/leaflet.wms.js"></script>
+<!-- pkk -->    
+    <script src="ext/leaflet.TileLayer.Rosreestr.js"></script>    
+<!-- scalebar -->
+    <script src="ext/leaflet.edgescalebar.js"></script>
+    <link rel="stylesheet" href="ext/leaflet.control.mousePosition.css">
+<!-- heatmap js -->
+    <script src="ext/heatmap.js"></script>
+    <script src="ext/leaflet-heatmap.js"></script>
+<!-- heatmap data -->
+    <script src="data/YieldHeatData.js"></script>
+<!-- ya maps -->
+    <!--script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=75780e21-1d3e-4aa2-b14e-1a99a3f4e6d9" type="text/javascript"></script>
+    <script src="ext/leaflet.layer.Yandex.min.js">
+    </script-->
+    
+    <script>
+      $( window ).on( "load", function() {
+        
+        var osm = L.tileLayer(
+          'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+            attribution: '...',
+            maxZoom: 18
+          }
+        );
+        
+        var esriSattelite = L.tileLayer(
+          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
+            attribution: 'esri',
+            maxZoom: 18
+          }
+        );
+        
+        var googleSattelite = L.tileLayer(
+          'http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+            subdomains:['mt0','mt1','mt2','mt3']},{
+            attribution: 'Google-Satellite',
+            maxZoom: 18
+          }
+        );
+        
+       var cadastre = L.tileLayer.Rosreestr(
+        'https://pkk.rosreestr.ru/arcgis/rest/services/PKK6/Cadastre/MapServer/export?layers%3Dshow%3A21&dpi=96&format=PNG32&bboxSR=102100&imageSR=102100&size=1024%2C1024&transparent=true&f=image&bbox={bbox}', {
+          tileSize: 1024,
+          attribution: 'Rosreestr'
+       });        
+/*        
+        var yandexVector = L.yandex();     
+        var yandexSatellite = L.yandex({ type: 'satellite' });
+*/        
+        
+        var heatRadiusMeters = 20;
+        
+        function getHeatmapRadius(aLat,aLevel){
+          metersPerPx = 156543.03392 * Math.cos(aLat * Math.PI / 180) / Math.pow(2,aLevel);
+          return heatRadiusMeters / metersPerPx;
+        };          
+        
+        var initialcenter = new L.LatLng(45.402376,41.217541)
+        var initialRadius = getHeatmapRadius(initialcenter.lat,15);
+       
+        var palette1 = { 
+                0.25: "rgb(0,0,255)", 
+                0.55: "rgb(0,255,0)", 
+                0.85: "rgb(255,255,0)",
+                1.0: "rgb(255,0,0)"
+            }
+        var palette2 = {
+                0.0: "rgba(000,000,255,0)",
+                0.1: "rgba(000,000,255,0)",
+                0.2: "rgba(000,255,000,1)",
+                0.5: "rgba(000,255,000,1)",
+                0.8: "rgba(255,255,000,1)",
+                1.0: "rgba(255,000,000,1)"
+            };
+            
+        var palette3 = {
+                0.0: "#f9ffe0",
+                0.2: "#e4ff7a",
+                0.4: "#ffe81a",
+                0.6: "#ffbd00",
+                0.8: "#ffa000",
+                1.0: "#fc7f00"
+            };
+
+        var palette4 = { 
+                0.0: "rgba(000,000,255,0)", 
+                0.2: "rgba(000,000,255,1)", 
+                0.4: "rgba(000,255,255,1)", 
+                0.6: "rgba(000,255,000,1)", 
+                0.8: "rgba(255,255,000,1)", 
+                1.0: "rgba(255,000,000,1)"
+            }
+
+        var palette = palette4;
+        
+        var can_r7 = new HeatmapOverlay({
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
+            "scaleRadius": false,
+            "useLocalExtrema": true,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Наполненность бункера%',
+            "gradient": { 
+                0.0: "rgba(000,000,255,1)", 
+                0.2: "rgba(000,000,255,1)", 
+                0.4: "rgba(000,255,255,1)", 
+                0.6: "rgba(000,255,000,1)", 
+                0.8: "rgba(255,255,000,1)", 
+                1.0: "rgba(255,000,000,1)"
+            }
+        });
+
+        var can16bitr12 = new HeatmapOverlay({
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
+            "scaleRadius": false,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Поток зерна',
+            "gradient": palette2
+        });
+        
+        var can16bitr15 = new HeatmapOverlay({
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
+            "scaleRadius": true,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Влажность',
+            "gradient": palette
+        });
+
+        var harvestedYield = new HeatmapOverlay({
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
+            "scaleRadius": true,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'Урожай',
+            "gradient": palette
+        });
+        
+        var harvestedYieldMoisture = new HeatmapOverlay({
+            "radius": initialRadius,
+            "blur": .85,
+            "minOpacity": 0.02,
+            "maxOpacity": .75,
+            "scaleRadius": true,
+            "fixedRadius": true,
+            "radiusMeters": heatRadiusMeters,
+            "useLocalExtrema": true,
+            "latField": 'y',
+            "lngField": 'x',
+            "valueField": 'УрожайВлажность',
+            "gradient": palette
+        });
+                
+        
+        can_r7.setData(yieldsData);
+        can16bitr12.setData(yieldsData);
+        can16bitr15.setData(yieldsData);
+        harvestedYield.setData(yieldsData);
+        harvestedYieldMoisture.setData(yieldsData);
+        
+        function setHeatmapsRadius(newRadius){
+        
+            can_r7.cfg.radius = newRadius;
+            can16bitr12.cfg.radius = newRadius;
+            can16bitr15.cfg.radius = newRadius;
+            harvestedYield.cfg.radius = newRadius;
+            harvestedYieldMoisture.cfg.radius = newRadius;
+        };
+        
+        
+        var mapControl = new L.Map('heatmapjs', {
+            center: new L.LatLng(45.402376,41.217541),
+            zoom: 15,
+            maxZoom: 18,
+            attributionControl: false,
+            zoomControl: true,
+            layers: [osm,esriSattelite,googleSattelite/*,yandexVector,yandexSatellite*/,can16bitr15]
+            });
+
+        mapControl.on('zoomstart', function(ev) {
+             setHeatmapsRadius(ev.target.options.center.lat,ev.target.options.zoom);
+        });
+
+
+        L.control.scale({
+          "imperial":false,
+          "position":'bottomleft'
+        }).addTo(mapControl);
+        
+        L.edgeScaleBar().addTo(mapControl);
+        
+        var baseLayers = {
+          "OpenStreetMap": osm,
+/*        
+          "Яндекс - карты":yandexVector,
+          "Яндекс - спутник":yandexSatellite,
+*/
+          "Esri world imagery": esriSattelite,
+          "Google sattelite": googleSattelite,
+        };
+        
+        
+        
+        var overlays = {
+            "%Наполненность бункера": can_r7,
+            "Поток зерна": can16bitr12,
+            "% Влажность": can16bitr15,
+            "Урожай": harvestedYield,
+            "УрожайВлажность": harvestedYieldMoisture,
+            "Публичная кадастровая карта": cadastre
+        };
+        
+        L.control.layers(baseLayers, overlays).addTo(mapControl);
+        
+
+        
+        });
+    </script>   
+    <style type="text/css">
+        html, body{
+          width: 95%;
+          height: 95%;
+        }
+        #heatmapjs {   
+          width: 95%;
+          height: 95%;
+          padding: 10px;
+          background-color: transparent;
+          -webkit-border-radius: 4px;
+          -moz-border-radius: 4px;
+          border-radius: 4px;
+        }
+      
+        .leaflet-control-scale-line {
+          box-sizing: border-box;
+        }
+    </style>  
+  </head>
+  <body>
+    <div class="header" id="header"><h1>Карта</h1></div>
+    <div class="heatmapjs" id="heatmapjs"></div>
+  </body>
+
+</html>
