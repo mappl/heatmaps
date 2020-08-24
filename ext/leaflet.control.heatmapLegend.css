@@ -1,0 +1,25 @@
+.heatmapLegend {
+    width: 100px;
+    padding: 2px;
+    background: #fff;
+    outline: 0.5px solid #bbb;
+    line-height: 1em;
+    font: 7px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+#heatmapLegendMin {
+  float: left;
+  margin: 0;
+  padding: 0;
+  max-width: 25px;
+  overflow: hidden;  
+}
+#heatmapLegendMax {
+  float: right;
+  margin: 0;
+  padding: 0;
+  max-width: 25px;
+  overflow: hidden;    
+}
+#heatmapLegendGradient {
+  width: 100%;
+}

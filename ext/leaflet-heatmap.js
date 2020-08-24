@@ -81,6 +81,7 @@
 
       map.off('moveend', this._reset, this);
     },
+    
     _draw: function() {
       if (!this._map) { return; }
       
@@ -147,10 +148,10 @@
 
         var radius;
 
-				if (this.cfg.fixedRadius && this.cfg.radiusMeters) {
-					radius = this._getPixelRadius();
-				} else if (entry.radius) {
-          radius = entry.radius * radiusMultiplier;
+        if (this.cfg.fixedRadius && this.cfg.radiusMeters) {
+            radius = this._getPixelRadius();
+        } else if (entry.radius) {
+            radius = entry.radius * radiusMultiplier;
         } else {
           radius = (this.cfg.radius || 2) * radiusMultiplier;
         }
