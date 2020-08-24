@@ -225,7 +225,7 @@
         };
         
         
-        var mapControl = new L.Map('heatmapjs', {
+        var mapControl = new L.Map('mapConrol', {
             center: new L.LatLng(45.402376,41.217541),
             zoom: 15,
             maxZoom: 18,
@@ -267,7 +267,22 @@
           "Google sattelite": googleSattelite,
         };
         
+        var activeOverlay = can16bitr15;
         
+        mapControl.on('overlayadd', function (e){
+           var overlay = e.layer;
+           if (overlay != activeOverlay){
+              activeOverlay = overlay;
+           } 
+        });
+        
+        mapControl.on('overlayremove', function (e) {
+           
+           var overlay = e.layer;
+           if (overlay == activeOverlay){
+              activeOverlay = null;
+           }; 
+        });
         
         var overlays = {
             "%Наполненность бункера": can_r7,
@@ -279,32 +294,36 @@
         };
         
         L.control.layers(baseLayers, overlays).addTo(mapControl);
-/*
-        var heatTooltip = document.querySelector('.tooltip');
+        
+        var wrapper = document.querySelector('.wrapper');
+        var heatTooltip = document.querySelector('.mapTooltip');
         
         function updateSample(x, y, value) {
          
             var transl = 'translate(' + (x + 15) + 'px, ' + (y + 15) + 'px)';
-              tooltip.style.webkitTransform = transl;
-              tooltip.innerHTML = value;
+              heatTooltip.style.webkitTransform = transl;
+              heatTooltip.innerHTML = value;
         };
         
         var heatOverlayPane = mapControl.getPanes('heatPointInfo').overlayPane;
         
-        heatOverlayPane.onmousemove = function (e) {
-          
-          todo get active heatmapOverlay ...
-          if (e.currentTarget._heatmap) {
-              
-              var display_x = e.layerX;
-              var display_y = e.layerY;
-              var display_val = e.currentTarget._heatmap.getValueAt({x: display_x,y: display_y});
-          
-              updateSample(display_x,display_y,display_val);
-          }
-        };
+        wrapper.onmousemove = function (e) {
+          if (activeOverlay) {
+            var hm = activeOverlay._heatmap;
+            if (hm) {
+                
+                var display_x = e.layerX;
+                var display_y = e.layerY;
+                var display_val = hm.getValueAt({x: display_x,y: display_y});
+                heatTooltip.style.display = (display_val > 0) ? 'block' : 'none';
+                updateSample(display_x,display_y,display_val);
+            }
+      }
+    };
 
-*/        
+        wrapper.onmouseout = function() {
+          heatTooltip.style.display = 'none';
+        };
         
         });
     </script>   
@@ -313,7 +332,7 @@
           width: 95%;
           height: 95%;
         }
-        #heatmapjs {   
+        #mapConrol {   
           width: 95%;
           height: 95%;
           padding: 10px;
@@ -322,26 +341,36 @@
           -moz-border-radius: 4px;
           border-radius: 4px;
         }
+        .wrapper { 
+          width: 100%;
+          height: 100%;
+          
+          position:relative; }
       
         .leaflet-control-scale-line {
           box-sizing: border-box;
         }
-        .tooltip { 
+        .mapTooltip { 
           position:absolute; 
           left:0; 
           top:0; 
-          background:rgba(0,0,0,.8); 
+          background:rgba(0,0,0,.8);
+          border-radius: 4px;
           color:white; 
           font-size:12px; 
           padding:3px; 
           line-height:18px; 
           display:none;
+          z-index:999;
         }
     </style>  
   </head>
   <body>
     <div class="header" id="header"><h1>Карта</h1></div>
-    <div class="heatmapjs" id="heatmapjs"></div>
+    <div class="mapTooltip"></div>
+    <div class="wrapper">
+      <div class="mapConrol" id="mapConrol"></div>
+    </div>
   </body>
 
 </html>
