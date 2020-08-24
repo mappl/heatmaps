@@ -16,6 +16,8 @@
 <!-- heatmap js -->
     <script src="ext/heatmap.js"></script>
     <script src="ext/leaflet-heatmap.js"></script>
+    <script src="ext/leaflet.control.heatmapLegend.js"></script>
+    <link rel="stylesheet" href="ext/leaflet.control.heatmapLegend.css">
 <!-- heatmap data -->
     <script src="data/YieldHeatData.js"></script>
 <!-- ya maps -->
@@ -57,6 +59,7 @@
         var yandexVector = L.yandex();     
         var yandexSatellite = L.yandex({ type: 'satellite' });
 */        
+        
         
         var heatRadiusMeters = 20;
         
@@ -103,6 +106,12 @@
 
         var palette = palette4;
         
+        
+        var heatmapLegend = L.control.heatmapLegend({
+          position: "bottomright"}
+        );
+        
+        
         var can_r7 = new HeatmapOverlay({
             "radius": initialRadius,
             "blur": .85,
@@ -122,6 +131,9 @@
                 0.6: "rgba(000,255,000,1)", 
                 0.8: "rgba(255,255,000,1)", 
                 1.0: "rgba(255,000,000,1)"
+            },
+            onExtremaChange: function(extremeData){
+              heatmapLegend.updateLegend(extremeData);
             }
         });
 
@@ -137,7 +149,10 @@
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Поток зерна',
-            "gradient": palette2
+            "gradient": palette2,
+            onExtremaChange: function(extremeData){
+              heatmapLegend.updateLegend(extremeData);
+            }
         });
         
         var can16bitr15 = new HeatmapOverlay({
@@ -152,7 +167,10 @@
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Влажность',
-            "gradient": palette
+            "gradient": palette,
+            onExtremaChange: function(extremeData){
+              heatmapLegend.updateLegend(extremeData);
+            }
         });
 
         var harvestedYield = new HeatmapOverlay({
@@ -167,7 +185,10 @@
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'Урожай',
-            "gradient": palette
+            "gradient": palette,
+            onExtremaChange: function(extremeData){
+              heatmapLegend.updateLegend(extremeData);
+            }
         });
         
         var harvestedYieldMoisture = new HeatmapOverlay({
@@ -182,9 +203,11 @@
             "latField": 'y',
             "lngField": 'x',
             "valueField": 'УрожайВлажность',
-            "gradient": palette
+            "gradient": palette,
+            onExtremaChange: function(extremeData){
+              heatmapLegend.updateLegend(extremeData);
+            }
         });
-                
         
         can_r7.setData(yieldsData);
         can16bitr12.setData(yieldsData);
@@ -214,8 +237,19 @@
         mapControl.on('zoomstart', function(ev) {
              setHeatmapsRadius(ev.target.options.center.lat,ev.target.options.zoom);
         });
+        mapControl.createPane('heatPointInfo');
+        can_r7['overlayPane'] = 'heatPointInfo';
+        can16bitr12['overlayPane'] = 'heatPointInfo';
+        can16bitr15['overlayPane'] = 'heatPointInfo';
+        harvestedYield['overlayPane'] = 'heatPointInfo';
+        harvestedYieldMoisture['overlayPane'] = 'heatPointInfo';
+        
 
-
+        
+        heatmapLegend.addTo(mapControl);
+        
+        
+        
         L.control.scale({
           "imperial":false,
           "position":'bottomleft'
@@ -245,8 +279,32 @@
         };
         
         L.control.layers(baseLayers, overlays).addTo(mapControl);
+/*
+        var heatTooltip = document.querySelector('.tooltip');
         
+        function updateSample(x, y, value) {
+         
+            var transl = 'translate(' + (x + 15) + 'px, ' + (y + 15) + 'px)';
+              tooltip.style.webkitTransform = transl;
+              tooltip.innerHTML = value;
+        };
+        
+        var heatOverlayPane = mapControl.getPanes('heatPointInfo').overlayPane;
+        
+        heatOverlayPane.onmousemove = function (e) {
+          
+          todo get active heatmapOverlay ...
+          if (e.currentTarget._heatmap) {
+              
+              var display_x = e.layerX;
+              var display_y = e.layerY;
+              var display_val = e.currentTarget._heatmap.getValueAt({x: display_x,y: display_y});
+          
+              updateSample(display_x,display_y,display_val);
+          }
+        };
 
+*/        
         
         });
     </script>   
@@ -267,6 +325,17 @@
       
         .leaflet-control-scale-line {
           box-sizing: border-box;
+        }
+        .tooltip { 
+          position:absolute; 
+          left:0; 
+          top:0; 
+          background:rgba(0,0,0,.8); 
+          color:white; 
+          font-size:12px; 
+          padding:3px; 
+          line-height:18px; 
+          display:none;
         }
     </style>  
   </head>
