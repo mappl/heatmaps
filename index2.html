@@ -209,12 +209,6 @@
             }
         });
         
-        can_r7.setData(yieldsData);
-        can16bitr12.setData(yieldsData);
-        can16bitr15.setData(yieldsData);
-        harvestedYield.setData(yieldsData);
-        harvestedYieldMoisture.setData(yieldsData);
-        
         function setHeatmapsRadius(newRadius){
         
             can_r7.cfg.radius = newRadius;
@@ -318,14 +312,20 @@
                 heatTooltip.style.display = (display_val > 0) ? 'block' : 'none';
                 updateSample(display_x,display_y,display_val);
             }
-      }
-    };
+          }
+        };
 
         wrapper.onmouseout = function() {
           heatTooltip.style.display = 'none';
         };
         
-        });
+        can_r7.setData(yieldsData);
+        can16bitr12.setData(yieldsData);
+        can16bitr15.setData(yieldsData);
+        harvestedYield.setData(yieldsData);
+        harvestedYieldMoisture.setData(yieldsData);
+      
+      });
     </script>   
     <style type="text/css">
         html, body{
