@@ -169,13 +169,10 @@
     },
     setData: function(data) {
       
-      // this._max = data.max || this._max;
-      // this._min = data.min || this._min;
-      
       var latField = this.cfg.latField || 'lat';
       var lngField = this.cfg.lngField || 'lng';
       var valueField = this.cfg.valueField || 'value';
-
+      
       // max and min value are now calculated directly from data      
       this._max = data.max || Math.max.apply(Math, data.data.map(function(datum) {
         return datum[valueField];
