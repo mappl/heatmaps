@@ -123,7 +123,7 @@
             "radiusMeters": heatRadiusMeters,
             "latField": 'y',
             "lngField": 'x',
-            "valueField": 'Наполненность бункера%',
+            "valueField": 'Наполненность бункера %',
             "gradient": { 
                 0.0: "rgba(000,000,255,1)", 
                 0.2: "rgba(000,000,255,1)", 
@@ -209,6 +209,12 @@
             }
         });
         
+        <!-- can_r7.setData(yieldsData); -->
+        <!-- can16bitr12.setData(yieldsData); -->
+        <!-- can16bitr15.setData(yieldsData); -->
+        <!-- harvestedYield.setData(yieldsData); -->
+        <!-- harvestedYieldMoisture.setData(yieldsData); -->
+        
         function setHeatmapsRadius(newRadius){
         
             can_r7.cfg.radius = newRadius;
@@ -232,6 +238,7 @@
              setHeatmapsRadius(ev.target.options.center.lat,ev.target.options.zoom);
         });
         mapControl.createPane('heatPointInfo');
+        
         can_r7['overlayPane'] = 'heatPointInfo';
         can16bitr12['overlayPane'] = 'heatPointInfo';
         can16bitr15['overlayPane'] = 'heatPointInfo';
@@ -241,7 +248,7 @@
 
         
         heatmapLegend.addTo(mapControl);
-        
+        heatmapLegend.updateLegend(yieldsData);        
         
         
         L.control.scale({
@@ -279,9 +286,9 @@
         });
         
         var overlays = {
-            "%Наполненность бункера": can_r7,
+            "Наполненность бункера %": can_r7,
             "Поток зерна": can16bitr12,
-            "% Влажность": can16bitr15,
+            "Влажность %": can16bitr15,
             "Урожай": harvestedYield,
             "УрожайВлажность": harvestedYieldMoisture,
             "Публичная кадастровая карта": cadastre
@@ -312,20 +319,46 @@
                 heatTooltip.style.display = (display_val > 0) ? 'block' : 'none';
                 updateSample(display_x,display_y,display_val);
             }
-          }
-        };
+      }
+    };
 
         wrapper.onmouseout = function() {
           heatTooltip.style.display = 'none';
         };
-        
+                                
         can_r7.setData(yieldsData);
         can16bitr12.setData(yieldsData);
         can16bitr15.setData(yieldsData);
         harvestedYield.setData(yieldsData);
-        harvestedYieldMoisture.setData(yieldsData);
-      
-      });
+        harvestedYieldMoisture.setData(yieldsData);        
+/*
+        var heatTooltip = document.querySelector('.tooltip');
+        
+        function updateSample(x, y, value) {
+         
+            var transl = 'translate(' + (x + 15) + 'px, ' + (y + 15) + 'px)';
+              tooltip.style.webkitTransform = transl;
+              tooltip.innerHTML = value;
+        };
+        
+        var heatOverlayPane = mapControl.getPanes('heatPointInfo').overlayPane;
+        
+        heatOverlayPane.onmousemove = function (e) {
+          
+          todo get active heatmapOverlay ...
+          if (e.currentTarget._heatmap) {
+              
+              var display_x = e.layerX;
+              var display_y = e.layerY;
+              var display_val = e.currentTarget._heatmap.getValueAt({x: display_x,y: display_y});
+          
+              updateSample(display_x,display_y,display_val);
+          }
+        };
+
+*/        
+        
+        });
     </script>   
     <style type="text/css">
         html, body{

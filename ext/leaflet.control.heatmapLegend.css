@@ -1,10 +1,10 @@
 .heatmapLegend {
-    width: 100px;
-    padding: 2px;
+    width: 200px;
+    padding: 4px;
     background: #fff;
     outline: 0.5px solid #bbb;
     line-height: 1em;
-    font: 7px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font: 9px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
     border-radius: 4px;
 }
 #heatmapLegendMin {
